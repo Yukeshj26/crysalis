@@ -1,12 +1,12 @@
 // src/components/Sidebar.jsx
-import React from 'react';
+import React, { useState } from 'react';
 
 const NAV_ITEMS = [
   {
     id: 'sos',
     label: 'RESPOND',
     icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
         <circle cx="12" cy="12" r="10"/>
         <line x1="12" y1="8" x2="12" y2="12"/>
         <line x1="12" y1="16" x2="12.01" y2="16"/>
@@ -17,11 +17,11 @@ const NAV_ITEMS = [
     id: 'dashboard',
     label: 'COMMAND',
     icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-        <rect x="3" y="3" width="7" height="7" rx="1"/>
-        <rect x="14" y="3" width="7" height="7" rx="1"/>
-        <rect x="3" y="14" width="7" height="7" rx="1"/>
-        <rect x="14" y="14" width="7" height="7" rx="1"/>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+        <rect x="3" y="3" width="7" height="7"/>
+        <rect x="14" y="3" width="7" height="7"/>
+        <rect x="3" y="14" width="7" height="7"/>
+        <rect x="14" y="14" width="7" height="7"/>
       </svg>
     ),
   },
@@ -29,8 +29,8 @@ const NAV_ITEMS = [
     id: 'nearby',
     label: 'NEARBY',
     icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+        <path d="M12 2C8 2 5 5 5 9c0 5 7 13 7 13s7-8 7-13c0-4-3-7-7-7z"/>
         <circle cx="12" cy="9" r="2.5"/>
       </svg>
     ),
@@ -38,62 +38,75 @@ const NAV_ITEMS = [
 ];
 
 export default function Sidebar({ activeTab, onTabChange, isOnline }) {
+  const [collapsed, setCollapsed] = useState(false);
+
   return (
-    <aside className="sidebar">
-      {/* Logo */}
+    <aside className={`sidebar ${collapsed ? 'collapsed' : ''}`}>
+
+      {/* FLOATING TOGGLE BUTTON */}
+      <button
+        className="sidebar-toggle floating"
+        onClick={() => setCollapsed(!collapsed)}
+      >
+        <svg
+          className={`toggle-icon ${collapsed ? 'rotated' : ''}`}
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+        >
+          <polyline points="15 18 9 12 15 6" />
+        </svg>
+      </button>
+
+      {/* LOGO */}
       <div className="sidebar-logo">
-        <div className="sidebar-logo-mark">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-            <polygon points="12,2 22,7 22,17 12,22 2,17 2,7" stroke="#ff4500" strokeWidth="1.5" fill="none"/>
-            <circle cx="12" cy="12" r="3" fill="#ff4500"/>
-            <line x1="12" y1="2" x2="12" y2="9" stroke="#ff4500" strokeWidth="1.5"/>
-            <line x1="12" y1="15" x2="12" y2="22" stroke="#ff4500" strokeWidth="1.5"/>
-          </svg>
-        </div>
-        <div className="sidebar-brand">
-          <span className="sidebar-brand-name">CRYSALIS</span>
-          <span className="sidebar-brand-sub">Crisis Response</span>
-        </div>
+        <img src="/logo.png" alt="logo" className="sidebar-logo-img" />
+        {!collapsed && (
+          <div className="sidebar-brand">
+            <span className="brand-title">CRYSALIS</span>
+            <span className="brand-sub">Crisis Response</span>
+          </div>
+        )}
       </div>
 
-      {/* Divider */}
       <div className="sidebar-divider" />
 
-      {/* Nav Items */}
+      {/* NAV */}
       <nav className="sidebar-nav">
         {NAV_ITEMS.map((item) => {
-          const isActive = activeTab === item.id;
+          const active = activeTab === item.id;
           const isSOS = item.id === 'sos';
 
           return (
             <button
               key={item.id}
               onClick={() => onTabChange(item.id)}
-              className={`sidebar-nav-item ${isActive ? 'active' : ''} ${isSOS ? 'sos-nav' : ''}`}
+              className={`nav-item ${active ? 'active' : ''} ${isSOS ? 'sos' : ''}`}
+              title={collapsed ? item.label : ''}
             >
-              {/* Active bar */}
-              {isActive && <span className={`sidebar-active-bar ${isSOS ? 'fire' : 'blue'}`} />}
+              {active && <span className={`active-bar ${isSOS ? 'fire' : 'blue'}`} />}
 
-              <span className="sidebar-nav-icon">{item.icon}</span>
-              <span className="sidebar-nav-label">{item.label}</span>
+              <span className="icon">{item.icon}</span>
 
-              {isSOS && (
-                <span className="sidebar-sos-dot" />
-              )}
+              {!collapsed && <span className="label">{item.label}</span>}
+
+              {isSOS && <span className="pulse-dot" />}
             </button>
           );
         })}
       </nav>
 
-      {/* Bottom status */}
+      {/* FOOTER */}
       <div className="sidebar-footer">
-        <div className="sidebar-divider" />
-        <div className="sidebar-status">
-          <span className={`sidebar-status-dot ${isOnline ? 'online' : 'offline'}`} />
-          <span className="sidebar-status-label">{isOnline ? 'ONLINE' : 'OFFLINE'}</span>
+        <div className="status">
+          <span className={`dot ${isOnline ? 'online' : 'offline'}`} />
+          {!collapsed && <span>{isOnline ? 'ONLINE' : 'OFFLINE'}</span>}
         </div>
-        <div className="sidebar-version">v2.1.0</div>
       </div>
+
     </aside>
   );
 }

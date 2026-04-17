@@ -385,3 +385,148 @@ button:active { transform: scale(0.97); }
 
   .app-content { margin-left: var(--sidebar-width); }
 }
+
+/* SIDEBAR BASE */
+.sidebar {
+  width: 240px;
+  height: 100vh;
+  background: #0b1220;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  transition: width 0.3s ease;
+  overflow: visible;
+}
+
+.sidebar.collapsed {
+  width: 70px;
+}
+
+/* LOGO */
+.sidebar-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px;
+}
+
+.sidebar-logo-img {
+  width: 36px;
+  filter: drop-shadow(0 0 8px orange);
+}
+
+.brand-title {
+  font-weight: bold;
+}
+
+.brand-sub {
+  font-size: 12px;
+  opacity: 0.6;
+}
+
+/* NAV */
+.sidebar-nav {
+  flex: 1;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  background: transparent;
+  border: none;
+  color: white;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.nav-item:hover {
+  background: rgba(255,255,255,0.05);
+  transform: translateX(4px);
+}
+
+/* ACTIVE */
+.nav-item.active {
+  background: rgba(0,150,255,0.1);
+}
+
+.active-bar {
+  position: absolute;
+  left: 0;
+  width: 4px;
+  height: 100%;
+}
+
+.active-bar.fire {
+  background: orange;
+  box-shadow: 0 0 10px orange;
+}
+
+.active-bar.blue {
+  background: #00aaff;
+  box-shadow: 0 0 10px #00aaff;
+}
+
+/* SOS pulse */
+.pulse-dot {
+  margin-left: auto;
+  width: 8px;
+  height: 8px;
+  background: red;
+  border-radius: 50%;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 red; }
+  70% { box-shadow: 0 0 10px 6px transparent; }
+  100% { box-shadow: 0 0 0 0 transparent; }
+}
+
+/* FLOATING BUTTON */
+.sidebar-toggle.floating {
+  position: absolute;
+  top: 50%;
+  right: -18px;
+  transform: translateY(-50%);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #111;
+  color: white;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 0 12px rgba(0,150,255,0.5);
+  transition: 0.3s;
+}
+
+.sidebar-toggle:hover {
+  transform: translateY(-50%) scale(1.1);
+}
+
+.toggle-icon {
+  transition: transform 0.3s;
+}
+
+.toggle-icon.rotated {
+  transform: rotate(180deg);
+}
+
+/* STATUS */
+.status {
+  padding: 16px;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 6px;
+}
+
+.dot.online { background: lime; }
+.dot.offline { background: red; }
